@@ -1,5 +1,6 @@
 package com.vasanth.authdemo;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,11 +17,16 @@ public class AuthDemoApplication {
 	}
 
 	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
+	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors().disable().csrf().disable()
 				.authorizeHttpRequests()
-				.requestMatchers("/about").permitAll()
-				.requestMatchers("/*/**").authenticated()
+				.requestMatchers(HttpMethod.GET, "/about").permitAll()
+				.requestMatchers(HttpMethod.POST, "/user").permitAll()
+				.requestMatchers("/*/**").permitAll()
 				.and()
 				.httpBasic();
 		return http.build();

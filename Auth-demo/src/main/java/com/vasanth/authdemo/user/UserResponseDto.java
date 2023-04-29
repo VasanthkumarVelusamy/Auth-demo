@@ -1,2 +1,10 @@
-package com.vasanth.authdemo.user;public class UserResponseDto {
+package com.vasanth.authdemo.user;
+
+import lombok.Data;
+
+@Data
+public class UserResponseDto {
+    private Long id;
+    private String username;
+    private String email;
 }
