@@ -25,8 +25,8 @@ public class AuthDemoApplication {
 		http.cors().disable().csrf().disable()
 				.authorizeHttpRequests()
 				.requestMatchers(HttpMethod.GET, "/about").permitAll()
-				.requestMatchers(HttpMethod.POST, "/user").permitAll()
-				.requestMatchers("/*/**").permitAll()
+				.requestMatchers(HttpMethod.POST, "/user", "/user/login").permitAll()
+				.requestMatchers("/*/**").authenticated()
 				.and()
 				.httpBasic();
 		return http.build();
