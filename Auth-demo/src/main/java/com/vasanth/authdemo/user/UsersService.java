@@ -1,6 +1,7 @@
 package com.vasanth.authdemo.user;
 
 import com.vasanth.authdemo.user.auth.AuthService;
+import com.vasanth.authdemo.user.auth.JwtService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,12 +12,14 @@ public class UsersService {
     ModelMapper modelMapper;
     PasswordEncoder passwordEncoder;
     AuthService authService;
+    JwtService jwtService;
 
-    public UsersService(UsersRepository usersRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, AuthService authService) {
+    public UsersService(UsersRepository usersRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder, AuthService authService, JwtService jwtService) {
         this.usersRepository = usersRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.authService = authService;
+        this.jwtService = jwtService;
     }
 
     public UserResponseDto createUser(CreateUserDto userDto) {
@@ -24,7 +27,13 @@ public class UsersService {
         userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
         UserEntity savedUser = usersRepository.save(userEntity);
         UserResponseDto userResponseDto = modelMapper.map(savedUser, UserResponseDto.class);
-        userResponseDto.setToken(authService.createToken(savedUser));
+        // OPTION 1:
+        // userResponseDto.setToken(authService.createToken(savedUser));
+        //
+        // OPTION 2:
+        String token = jwtService.createJwt(savedUser.getUsername());
+        //
+        userResponseDto.setToken(token);
         return userResponseDto;
     }
 
@@ -39,9 +48,13 @@ public class UsersService {
             throw new RuntimeException("incorrect password");
         }
         UserResponseDto userResponseDto = modelMapper.map(userEntity, UserResponseDto.class);
-
-        userResponseDto.setToken(authService.createToken(userEntity).toString());
-
+        // OPTION 1:
+        // userResponseDto.setToken(authService.createToken(userEntity).toString());
+        //
+        // OPTION 2:
+        String token = jwtService.createJwt(userEntity.getUsername());
+        userResponseDto.setToken(token);
+        //
         return userResponseDto;
     }
 }
