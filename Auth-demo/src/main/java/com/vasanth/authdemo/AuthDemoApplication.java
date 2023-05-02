@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 
 @SpringBootApplication
 public class AuthDemoApplication {
@@ -22,6 +23,14 @@ public class AuthDemoApplication {
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
+
+	@Bean
+	public JwtAuthenticationFilter jwtAuthenticationFilter() {
+		return new JwtAuthenticationFilter(
+				new JwtAuthenticationManager(),
+				new JwtAuthenticationConverter()
+		);
+	}
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors().disable().csrf().disable()
@@ -30,7 +39,8 @@ public class AuthDemoApplication {
 				.requestMatchers(HttpMethod.POST, "/user", "/user/login").permitAll()
 				.requestMatchers("/*/**").authenticated()
 				.and()
-				.httpBasic();
+				.addFilterBefore(jwtAuthenticationFilter(), AnonymousAuthenticationFilter.class)
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		return http.build();
 	}
 
