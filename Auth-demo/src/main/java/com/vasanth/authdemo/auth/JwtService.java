@@ -1,4 +1,4 @@
-package com.vasanth.authdemo.user.auth;
+package com.vasanth.authdemo.auth;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

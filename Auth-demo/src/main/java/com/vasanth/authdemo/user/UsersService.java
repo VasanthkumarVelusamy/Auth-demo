@@ -1,7 +1,7 @@
 package com.vasanth.authdemo.user;
 
-import com.vasanth.authdemo.user.auth.AuthService;
-import com.vasanth.authdemo.user.auth.JwtService;
+import com.vasanth.authdemo.auth.AuthService;
+import com.vasanth.authdemo.auth.JwtService;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,5 +56,11 @@ public class UsersService {
         userResponseDto.setToken(token);
         //
         return userResponseDto;
+    }
+
+    public UserResponseDto findUserByUsername(String username) {
+        var user = usersRepository.findByUsername(username);
+        var response = modelMapper.map(user, UserResponseDto.class);
+        return response;
     }
 }

@@ -1,4 +1,4 @@
-package com.vasanth.authdemo.user.auth;
+package com.vasanth.authdemo.auth;
 
 import com.vasanth.authdemo.JwtAuthenticationFilter;
 import com.vasanth.authdemo.JwtAuthenticationManager;
@@ -26,7 +26,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().disable().csrf().disable()
-                .authorizeRequests()
+                .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.GET, "/about").permitAll()
                 .requestMatchers(HttpMethod.POST, "/user", "/user/login").permitAll()
                 .requestMatchers("/*/**").authenticated()

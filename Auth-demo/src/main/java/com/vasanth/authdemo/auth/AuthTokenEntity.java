@@ -1,4 +1,4 @@
-package com.vasanth.authdemo.user.auth;
+package com.vasanth.authdemo.auth;
 
 import com.vasanth.authdemo.user.UserEntity;
 import jakarta.persistence.*;

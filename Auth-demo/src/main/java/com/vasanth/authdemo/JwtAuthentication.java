@@ -1,5 +1,6 @@
 package com.vasanth.authdemo;
 
+import com.vasanth.authdemo.user.UserResponseDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -7,10 +8,15 @@ import java.util.Collection;
 
 public class JwtAuthentication implements Authentication {
 
-    public String jwtString;
+    private String jwtString;
+    public UserResponseDto user;
 
     public JwtAuthentication(String jwtString) {
         this.jwtString = jwtString;
+    }
+
+    public void setUser(UserResponseDto user) {
+        this.user = user;
     }
 
     @Override
@@ -29,13 +35,13 @@ public class JwtAuthentication implements Authentication {
     }
 
     @Override
-    public Object getPrincipal() {
-        return null;
+    public UserResponseDto getPrincipal() {
+        return user;
     }
 
     @Override
     public boolean isAuthenticated() {
-        return false;
+        return (user != null);
     }
 
     @Override

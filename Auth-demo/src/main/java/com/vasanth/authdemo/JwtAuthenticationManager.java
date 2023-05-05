@@ -1,7 +1,7 @@
 package com.vasanth.authdemo;
 
 import com.vasanth.authdemo.user.UsersService;
-import com.vasanth.authdemo.user.auth.JwtService;
+import com.vasanth.authdemo.auth.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -11,8 +11,9 @@ public class JwtAuthenticationManager implements AuthenticationManager {
     private JwtService jwtService;
     private UsersService usersService;
 
-    public JwtAuthenticationManager(JwtService jwtService) {
+    public JwtAuthenticationManager(JwtService jwtService, UsersService usersService) {
         this.jwtService = jwtService;
+        this.usersService = usersService;
     }
 
     @Override
@@ -21,7 +22,9 @@ public class JwtAuthenticationManager implements AuthenticationManager {
             JwtAuthentication jwtAuthentication = (JwtAuthentication) authentication;
             String jwtString = jwtAuthentication.getCredentials();
             var username = jwtService.getUsernameFromJwt(jwtString);
-
+            var user = usersService.findUserByUsername(username);
+            jwtAuthentication.setUser(user);
+            return jwtAuthentication;
         }
         return null;
     }
